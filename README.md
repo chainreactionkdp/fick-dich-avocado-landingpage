@@ -2,17 +2,18 @@
 
 Statische, responsive Werbe-Landingpage für das Amazon-KDP-Buch **Fick dich, Avocado!**.
 
+Das Design orientiert sich am echten Buchcover: kräftiges Magenta, Gelb, Cyan, harte schwarze Konturen und ein frecher Pop-Art-/Social-Ad-Look.
+
 ## Dateien
 
 - `index.html` - Seitenstruktur, SEO-Metadaten, Open-Graph-Tags und Inhalte
-- `styles.css` - responsives Design ohne Framework
-- `script.js` - kleines JavaScript für Jahreszahl, Cover-Fallback und CTA-Hook
-- `assets/.gitkeep` - hält den vorbereiteten Asset-Ordner im Repository
-- `assets/book-cover.jpg` - vorgesehener Pfad für dein echtes Buchcover
+- `styles.css` - responsives Cover-basiertes Design ohne Framework
+- `script.js` - kleines JavaScript für Jahreszahl und CTA-Hook
+- `assets/book-cover.jpg` - echtes Buchcover und zentrales Hero-Bild
 
-## Coverbild einfügen
+## Coverbild
 
-Lege dein echtes Buchcover unter diesem Pfad ab:
+Das Cover wird unter diesem Pfad geladen:
 
 ```text
 assets/book-cover.jpg
@@ -20,12 +21,11 @@ assets/book-cover.jpg
 
 Wichtig:
 
-- Der Dateiname sollte gleich bleiben: `book-cover.jpg`
+- Der Dateiname muss `book-cover.jpg` bleiben
 - Empfohlenes Format: JPG
 - Empfohlenes Seitenverhältnis: etwa 2:3
-- Gute Größe: ca. 1000 x 1500 px oder kleiner, damit die Seite schnell lädt
-
-Solange noch kein Cover vorhanden ist, zeigt die Website automatisch einen grafischen Platzhalter im Hero-Bereich.
+- Gute Größe: ca. 1000 x 1500 px bis 1600 x 2400 px
+- Das Cover ist das zentrale visuelle Element der Landingpage
 
 ## Amazon-Link ändern
 
