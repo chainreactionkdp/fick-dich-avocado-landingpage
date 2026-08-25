@@ -1,0 +1,60 @@
+openapi: 3.1.0
+info:
+  title: Radar Reel Publisher
+  version: 1.0.0
+servers:
+  - url: https://YOUR-REEL-WORKER.workers.dev
+paths:
+  /queue-reel:
+    post:
+      operationId: queueThrillerReel
+      summary: Queue and automatically publish one Thriller Radar Facebook Reel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [asin, product_title, brand_or_author, family_key, description, palette, scenes]
+              properties:
+                asin: {type: string}
+                product_title: {type: string}
+                brand_or_author: {type: string}
+                family_key: {type: string}
+                description: {type: string}
+                duration_per_scene: {type: number, minimum: 2.2, maximum: 3.8}
+                palette:
+                  type: object
+                  required: [background, accent, text]
+                  properties:
+                    background: {type: string, description: "Hex color e.g. #061C25"}
+                    accent: {type: string, description: "Hex color e.g. #F5BE1C"}
+                    text: {type: string, description: "Hex color e.g. #F6F6F2"}
+                scenes:
+                  type: array
+                  minItems: 4
+                  maxItems: 8
+                  items:
+                    type: object
+                    required: [lines]
+                    properties:
+                      lines:
+                        type: array
+                        minItems: 1
+                        maxItems: 4
+                        items: {type: string, maxLength: 48}
+                      accent_line: {type: integer, minimum: 0, maximum: 3}
+      responses:
+        '200': {description: Reel queued}
+        '409': {description: Product blocked by 90-day cooldown}
+  /reel-status:
+    get:
+      operationId: getThrillerReelStatus
+      summary: Get render and Facebook publishing status
+      parameters:
+        - in: query
+          name: job_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Status returned}
