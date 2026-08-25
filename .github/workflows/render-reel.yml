@@ -1,0 +1,40 @@
+name: Render Facebook Reel
+on:
+  workflow_dispatch:
+    inputs:
+      job_b64:
+        description: Base64 encoded reel job
+        required: true
+        type: string
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install --quiet pillow
+      - name: Render MP4
+        env:
+          JOB_B64: ${{ inputs.job_b64 }}
+        run: python radar-reel-renderer/render_reel.py
+      - name: Upload MP4 to Reel Worker
+        env:
+          JOB_B64: ${{ inputs.job_b64 }}
+        run: |
+          python - <<'PY' > /tmp/job.env
+          import os,json,base64,shlex
+          j=json.loads(base64.b64decode(os.environ['JOB_B64']).decode())
+          print('JOB_ID='+shlex.quote(j['job_id']))
+          print('UPLOAD_TOKEN='+shlex.quote(j['upload_token']))
+          print('WORKER_ORIGIN='+shlex.quote(j['worker_origin']))
+          PY
+          source /tmp/job.env
+          curl --fail-with-body --retry 2 \
+            -X POST "$WORKER_ORIGIN/reel-upload?job_id=$JOB_ID" \
+            -H "Authorization: Bearer $UPLOAD_TOKEN" \
+            -H "Content-Type: video/mp4" \
+            --data-binary @build/reel.mp4
